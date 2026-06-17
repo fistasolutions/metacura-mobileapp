@@ -1,0 +1,176 @@
+/**
+ * AppTabs — the four bottom tabs present on every authenticated screen:
+ * Home · Records · Ask Doctor · Profile. Plus a FloatingMic overlay that opens
+ * a voice query from any tab. Each tab is its own native-stack so detail screens
+ * push within the tab. See specs/appshell.md.
+ */
+import React from 'react';
+import { Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useTheme } from '../theme';
+import { FloatingMic } from '../components';
+import {
+  AppTabsParamList,
+  AskStackParamList,
+  HomeStackParamList,
+  ProfileStackParamList,
+  RecordsStackParamList,
+  RootStackParamList,
+} from './routes';
+
+// Tab screens
+import HomeDashboardScreen from '../screens/home/HomeDashboardScreen';
+import RecordsTimelineScreen from '../screens/records/RecordsTimelineScreen';
+import RecordDetailScreen from '../screens/records/RecordDetailScreen';
+import RecordsEmptyScreen from '../screens/records/RecordsEmptyScreen';
+import UploadEntryScreen from '../screens/upload/UploadEntryScreen';
+import CameraScannerScreen from '../screens/upload/CameraScannerScreen';
+import UploadProgressScreen from '../screens/upload/UploadProgressScreen';
+import ClassifyConfirmScreen from '../screens/upload/ClassifyConfirmScreen';
+import AskLandingScreen from '../screens/askdoctor/AskLandingScreen';
+import VoiceQueryScreen from '../screens/askdoctor/VoiceQueryScreen';
+import AnswerDetailScreen from '../screens/askdoctor/AnswerDetailScreen';
+import ProfileScreen from '../screens/profile/ProfileScreen';
+import FamilyDependentsScreen from '../screens/profile/FamilyDependentsScreen';
+import ProfileSwitcherScreen from '../screens/profile/ProfileSwitcherScreen';
+import PrivacyDataScreen from '../screens/profile/PrivacyDataScreen';
+import ReceiptsBillingScreen from '../screens/profile/ReceiptsBillingScreen';
+import ShareWithClinicianScreen from '../screens/share/ShareWithClinicianScreen';
+import ExportDataScreen from '../screens/share/ExportDataScreen';
+import AuditTrailScreen from '../screens/share/AuditTrailScreen';
+
+const HomeStack = createNativeStackNavigator<HomeStackParamList>();
+function HomeStackNavigator() {
+  return (
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+      <HomeStack.Screen name="HomeDashboard" component={HomeDashboardScreen} />
+    </HomeStack.Navigator>
+  );
+}
+
+const RecordsStack = createNativeStackNavigator<RecordsStackParamList>();
+function RecordsStackNavigator() {
+  return (
+    <RecordsStack.Navigator screenOptions={{ headerShown: false }}>
+      <RecordsStack.Screen
+        name="RecordsTimeline"
+        component={RecordsTimelineScreen}
+      />
+      <RecordsStack.Screen name="RecordDetail" component={RecordDetailScreen} />
+      <RecordsStack.Screen name="RecordsEmpty" component={RecordsEmptyScreen} />
+      <RecordsStack.Screen name="UploadEntry" component={UploadEntryScreen} />
+      <RecordsStack.Screen
+        name="CameraScanner"
+        component={CameraScannerScreen}
+      />
+      <RecordsStack.Screen
+        name="UploadProgress"
+        component={UploadProgressScreen}
+      />
+      <RecordsStack.Screen
+        name="ClassifyConfirm"
+        component={ClassifyConfirmScreen}
+      />
+    </RecordsStack.Navigator>
+  );
+}
+
+const AskStack = createNativeStackNavigator<AskStackParamList>();
+function AskStackNavigator() {
+  return (
+    <AskStack.Navigator screenOptions={{ headerShown: false }}>
+      <AskStack.Screen name="AskLanding" component={AskLandingScreen} />
+      <AskStack.Screen name="VoiceQuery" component={VoiceQueryScreen} />
+      <AskStack.Screen name="AnswerDetail" component={AnswerDetailScreen} />
+    </AskStack.Navigator>
+  );
+}
+
+const ProfileStack = createNativeStackNavigator<ProfileStackParamList>();
+function ProfileStackNavigator() {
+  return (
+    <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
+      <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+      <ProfileStack.Screen
+        name="FamilyDependents"
+        component={FamilyDependentsScreen}
+      />
+      <ProfileStack.Screen
+        name="ProfileSwitcher"
+        component={ProfileSwitcherScreen}
+      />
+      <ProfileStack.Screen name="PrivacyData" component={PrivacyDataScreen} />
+      <ProfileStack.Screen
+        name="ReceiptsBilling"
+        component={ReceiptsBillingScreen}
+      />
+      <ProfileStack.Screen
+        name="ShareWithClinician"
+        component={ShareWithClinicianScreen}
+      />
+      <ProfileStack.Screen name="ExportData" component={ExportDataScreen} />
+      <ProfileStack.Screen name="AuditTrail" component={AuditTrailScreen} />
+    </ProfileStack.Navigator>
+  );
+}
+
+const Tab = createBottomTabNavigator<AppTabsParamList>();
+
+const TAB_GLYPH: Record<keyof AppTabsParamList, string> = {
+  HomeTab: '⌂',
+  RecordsTab: '▤',
+  AskTab: '✦',
+  ProfileTab: '◉',
+};
+const TAB_LABEL: Record<keyof AppTabsParamList, string> = {
+  HomeTab: 'Home',
+  RecordsTab: 'Records',
+  AskTab: 'Ask Doctor',
+  ProfileTab: 'Profile',
+};
+
+export function AppTabs() {
+  const t = useTheme();
+  const rootNav =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarActiveTintColor: t.colors.primary,
+          tabBarInactiveTintColor: t.colors.textMuted,
+          tabBarStyle: {
+            backgroundColor: t.colors.surface,
+            borderTopColor: t.colors.border,
+          },
+          tabBarLabel: TAB_LABEL[route.name],
+          tabBarLabelStyle: {
+            fontFamily: t.fonts.bodyMedium,
+            fontSize: 11,
+          },
+          tabBarIcon: ({ color }: { color: string }) => (
+            <Text style={{ color, fontSize: 18 }}>{TAB_GLYPH[route.name]}</Text>
+          ),
+        })}
+      >
+        <Tab.Screen name="HomeTab" component={HomeStackNavigator} />
+        <Tab.Screen name="RecordsTab" component={RecordsStackNavigator} />
+        <Tab.Screen name="AskTab" component={AskStackNavigator} />
+        <Tab.Screen name="ProfileTab" component={ProfileStackNavigator} />
+      </Tab.Navigator>
+      <FloatingMic
+        onPress={() =>
+          rootNav.navigate('App', {
+            screen: 'AskTab',
+            params: { screen: 'VoiceQuery' },
+          } as never)
+        }
+      />
+    </View>
+  );
+}
