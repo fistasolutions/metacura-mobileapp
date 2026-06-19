@@ -7,9 +7,9 @@ Step 2 of the product spine: understand. The Source sheet (18) is specced separa
 ---
 
 ## 16 · Records timeline — `RecordsTimelineScreen.tsx`
-- **Filter chips** at the top: All · Labs · CT · MRI · Ultrasound · Rx · Visits · Voice notes.
-- **Search field** at the very top.
-- **Chronological list** with a type icon, document title, source, and date per row. Use the design system's date-block timeline pattern (a left date block, a status-colored dot connector, columnar metadata).
+- **Filter chips** at the top: All · Labs · CT · MRI · Ultrasound · Rx · Visits · Voice notes. Selecting a chip narrows the list to that record type (Rx covers Medication + Prescription); All clears the filter.
+- **Search field** at the very top, filtering by title, source, or type. Search and the active chip combine (AND).
+- **Chronological list** with a type icon, document title, source, and date per row. Use the design system's date-block timeline pattern (a left date block, a status-colored dot connector, columnar metadata). When nothing matches the filter/search, show a quiet "No records found" empty state.
 - Primary action: a prominent path to Upload (12).
 
 ## 17 · Record detail — `RecordDetailScreen.tsx`

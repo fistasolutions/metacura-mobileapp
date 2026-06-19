@@ -1,12 +1,12 @@
 // Screen 18 · Source sheet — THE SIGNATURE INTERACTION — see specs/sourcesheet.md
 // A modal: the original document opens scrolled to the exact line that produced
 // the answer, with that line highlighted. The product's entire trust claim
-// depends on this feeling instant (no spinner).
-import React, { useEffect, useRef } from 'react';
-import { ScrollView, View } from 'react-native';
+// depends on this feeling instant (no spinner). Tap and hold any line to magnify.
+import React, { useEffect, useRef, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Maximize2 } from 'lucide-react-native';
-import { Sheet, AppText, Badge } from '../../components';
+import { Sheet, AppText, Badge, StatusPill } from '../../components';
 import { useTheme } from '../../theme';
 import { MOCK_SOURCE_DOCUMENTS } from '../../data';
 import { SourceLine } from '../../data/types';
@@ -21,6 +21,7 @@ export default function SourceSheetScreen() {
 
   const scrollRef = useRef<ScrollView>(null);
   const highlightY = useRef(0);
+  const [magnified, setMagnified] = useState<SourceLine | null>(null);
 
   useEffect(() => {
     // Jump to the highlighted line right after mount. Instant, no spinner.
@@ -33,70 +34,65 @@ export default function SourceSheetScreen() {
     return () => clearTimeout(id);
   }, []);
 
-  const renderLine = (line: SourceLine) => {
-    const isHighlighted = line.n === highlightedLine;
-
-    let body: React.ReactNode;
+  const lineBody = (line: SourceLine) => {
     switch (line.kind) {
       case 'title':
-        body = <AppText variant="h2">{line.text}</AppText>;
-        break;
+        return <AppText variant="h2">{line.text}</AppText>;
       case 'section':
-        body = (
-          <AppText
-            variant="eyebrow"
-            color={t.colors.textMuted}
-            style={{ textTransform: 'uppercase' }}
-          >
+        return (
+          <AppText variant="eyebrow" color={t.colors.textMuted} style={styles.upper}>
             {line.text}
           </AppText>
         );
-        break;
       case 'meta':
-        body = (
+        return (
           <AppText variant="secondary" color={t.colors.textMuted}>
             {line.text}
           </AppText>
         );
-        break;
       case 'value':
-        body = (
+        return (
           <AppText variant="body" style={{ fontFamily: t.fonts.mono }}>
             {line.text}
           </AppText>
         );
-        break;
       default:
-        body = <AppText variant="body">{line.text}</AppText>;
+        return <AppText variant="body">{line.text}</AppText>;
     }
+  };
 
-    if (isHighlighted) {
-      return (
-        <View
-          key={line.n}
-          onLayout={e => {
-            highlightY.current = e.nativeEvent.layout.y;
-          }}
-          style={{
-            backgroundColor: t.colors.normalBg,
-            borderLeftWidth: 3,
-            borderLeftColor: t.colors.primary,
-            borderRadius: t.radius.sm,
-            paddingVertical: t.spacing[2],
-            paddingHorizontal: t.spacing[3],
-            gap: t.spacing[2],
-          }}
-        >
-          {body}
-          <Badge variant="source" label="Linked" />
-        </View>
-      );
-    }
-
+  const renderLine = (line: SourceLine) => {
+    const isHighlighted = line.n === highlightedLine;
     return (
-      <View key={line.n} style={{ paddingHorizontal: t.spacing[3] }}>
-        {body}
-      </View>
+      <Pressable
+        key={line.n}
+        onLongPress={() => setMagnified(line)}
+        onPressOut={() => setMagnified(null)}
+        delayLongPress={180}
+        onLayout={
+          isHighlighted
+            ? e => {
+                highlightY.current = e.nativeEvent.layout.y;
+              }
+            : undefined
+        }
+        style={
+          isHighlighted
+            ? {
+                backgroundColor: t.colors.normalBg,
+                borderLeftWidth: 3,
+                borderLeftColor: t.colors.primary,
+                borderRadius: t.radius.sm,
+                paddingVertical: t.spacing[2],
+                paddingHorizontal: t.spacing[3],
+                gap: t.spacing[2],
+              }
+            : { paddingHorizontal: t.spacing[3] }
+        }
+      >
+        {lineBody(line)}
+        {isHighlighted ? <Badge variant="source" label="Linked" /> : null}
+      </Pressable>
     );
   };
 
@@ -107,29 +103,78 @@ export default function SourceSheetScreen() {
       onClose={() => nav.goBack()}
       scroll={false}
     >
-      <ScrollView
-        ref={scrollRef}
-        style={{ flex: 1 }}
-        contentContainerStyle={{ gap: t.spacing[3], paddingBottom: t.spacing[4] }}
-        showsVerticalScrollIndicator={false}
-      >
-        {doc.lines.map(renderLine)}
-
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: t.spacing[2],
-            paddingHorizontal: t.spacing[3],
-            marginTop: t.spacing[3],
-          }}
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          ref={scrollRef}
+          style={{ flex: 1 }}
+          contentContainerStyle={{ gap: t.spacing[3], paddingBottom: t.spacing[4] }}
+          showsVerticalScrollIndicator={false}
         >
-          <Maximize2 size={14} color={t.colors.textMuted} strokeWidth={2.2} />
-          <AppText variant="secondary" color={t.colors.textMuted}>
-            Tap and hold to magnify
-          </AppText>
-        </View>
-      </ScrollView>
+          {doc.lines.map(renderLine)}
+
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: t.spacing[2],
+              paddingHorizontal: t.spacing[3],
+              marginTop: t.spacing[3],
+            }}
+          >
+            <Maximize2 size={14} color={t.colors.textMuted} strokeWidth={2.2} />
+            <AppText variant="secondary" color={t.colors.textMuted}>
+              Tap and hold to magnify
+            </AppText>
+          </View>
+        </ScrollView>
+
+        {/* Magnifier — long-press a line to enlarge it. Non-interactive overlay
+            so the originating press keeps tracking and clears on release. */}
+        {magnified ? (
+          <View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.magOverlay]}>
+            <View
+              style={[
+                styles.magCard,
+                { backgroundColor: t.colors.surface, borderColor: t.colors.border, borderRadius: t.radius.xl },
+                t.shadows.lg,
+              ]}
+            >
+              <AppText variant="eyebrow" color={t.colors.textMuted} style={styles.upper}>
+                Magnified · line {magnified.n}
+              </AppText>
+              <AppText
+                style={{
+                  fontFamily: magnified.kind === 'value' ? t.fonts.mono : t.fonts.headingSemibold,
+                  fontSize: t.fontSize['2xl'],
+                  lineHeight: 34,
+                  color: t.colors.text,
+                }}
+              >
+                {magnified.text}
+              </AppText>
+              {magnified.flag ? <StatusPill status={magnified.flag} /> : null}
+            </View>
+          </View>
+        ) : null}
+      </View>
     </Sheet>
   );
 }
+
+const styles = StyleSheet.create({
+  upper: { textTransform: 'uppercase' },
+  magOverlay: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.35)',
+    paddingHorizontal: 24,
+  },
+  magCard: {
+    borderWidth: 1,
+    padding: 24,
+    gap: 12,
+    alignItems: 'flex-start',
+    maxWidth: 420,
+    width: '100%',
+  },
+});

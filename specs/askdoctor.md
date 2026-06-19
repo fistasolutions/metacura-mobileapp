@@ -7,11 +7,12 @@ Step 3 of the spine: ask. **Voice and text are equal peers, not voice as a sub-f
 ---
 
 ## 20 · Ask landing — `AskLandingScreen.tsx`
-- **Persistent conversation view** (the thread survives across sessions).
-- **Composer** at the bottom with a microphone button and a send button, given equal weight.
-- **Suggested prompts** above the composer: "Why is my cholesterol high?", "Compare to last quarter", "Prep me for Tuesday's visit."
-- **Every answer shows source pills** linked to the specific records and lines that produced it. Tapping a pill opens the answer detail (22) / Source sheet (18).
-- Reached from a record's "Ask about this" with `{ recordId }` pre-loaded as context.
+A modern chat surface (ChatGPT / Claude feel), concise, never heavy boxes:
+- **Slim header** — a small gradient sparkle avatar + "Ask Doctor" + "Answers from your records, linked".
+- **Empty state** (first visit) — a centered sparkle medallion, a short greeting, a one-line trust note, and **suggestion cards** ("Why is my cholesterol high?", "Compare to last quarter", "Prep me for Tuesday's visit").
+- **Conversation thread** — right-aligned **teal user bubbles**; assistant turns are a small sparkle avatar + a **light bubble** (muted surface, sharp top-left corner) with tight copy, then **source chips** (`Link2` + file · line) and a quiet **Play** affordance. Tapping a source chip opens the answer detail (22) / Source sheet (18).
+- **Composer** pinned at the bottom with a microphone button and a gradient send button, given equal weight; a horizontal **quick-prompt** row sits above it during a conversation.
+- **Persistent conversation view** (the thread survives across sessions). Reached from a record's "Ask about this" with `{ recordId }` pre-loaded as context (shown as an "Asking about:" chip).
 
 ## 21 · Voice query — `VoiceQueryScreen.tsx`
 Full-screen microphone view with live transcription and a waveform animation (Reanimated). A cancel option. On release, the transcription confirms and the answer streams back, with the option to play it as audio. Reached from the composer mic and from the shell **FloatingMic** on any tab.

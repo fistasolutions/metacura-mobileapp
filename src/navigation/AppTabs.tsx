@@ -4,7 +4,7 @@
  * a voice query from any tab. Each tab is its own native-stack so detail screens
  * push within the tab. See specs/appshell.md.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -132,14 +132,31 @@ const TAB_LABEL: Record<keyof AppTabsParamList, string> = {
   ProfileTab: 'Profile',
 };
 
+// Routes that take over the full screen: the app chrome (tab bar + FloatingMic)
+// is hidden so they read as immersive surfaces.
+const IMMERSIVE_ROUTES = ['CameraScanner'];
+
+function deepestRouteName(state?: any): string | undefined {
+  if (!state || typeof state.index !== 'number') return undefined;
+  const route = state.routes[state.index];
+  return (route?.state && deepestRouteName(route.state)) || route?.name;
+}
+
 export function AppTabs() {
   const t = useTheme();
   const rootNav =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [immersive, setImmersive] = useState(false);
 
   return (
     <View style={{ flex: 1 }}>
       <Tab.Navigator
+        screenListeners={{
+          state: e => {
+            const leaf = deepestRouteName((e.data as any)?.state);
+            setImmersive(!!leaf && IMMERSIVE_ROUTES.includes(leaf));
+          },
+        }}
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarActiveTintColor: t.colors.primary,
@@ -147,6 +164,7 @@ export function AppTabs() {
           tabBarStyle: {
             backgroundColor: t.colors.surface,
             borderTopColor: t.colors.border,
+            display: immersive ? 'none' : 'flex',
           },
           tabBarLabel: TAB_LABEL[route.name],
           tabBarLabelStyle: {
@@ -163,14 +181,16 @@ export function AppTabs() {
         <Tab.Screen name="AskTab" component={AskStackNavigator} />
         <Tab.Screen name="ProfileTab" component={ProfileStackNavigator} />
       </Tab.Navigator>
-      <FloatingMic
-        onPress={() =>
-          rootNav.navigate('App', {
-            screen: 'AskTab',
-            params: { screen: 'VoiceQuery' },
-          } as never)
-        }
-      />
+      {immersive ? null : (
+        <FloatingMic
+          onPress={() =>
+            rootNav.navigate('App', {
+              screen: 'AskTab',
+              params: { screen: 'VoiceQuery' },
+            } as never)
+          }
+        />
+      )}
     </View>
   );
 }

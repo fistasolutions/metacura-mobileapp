@@ -12,9 +12,9 @@
 // ---- Auth / pre-auth (Module A + B) ----
 export type AuthStackParamList = {
   Splash: undefined; // 01
-  Welcome: undefined; // 02
+  Welcome: undefined; // 02 — welcome carousel
   SignUp: { plan?: 'summary' | 'insights' | 'opinion' } | undefined; // 03
-  VerifyEmail: { email: string } | undefined; // 04
+  VerifyEmail: { email?: string; phone?: string } | undefined; // 04
   Login: undefined; // 05
   ForgotPassword: undefined; // 06
   ResetPassword: { token?: string } | undefined; // 07

@@ -11,6 +11,7 @@ export { GlassCard } from './GlassCard';
 export { HeaderBand } from './HeaderBand';
 export { IconCircle } from './IconCircle';
 export { Input } from './Input';
+export { OtpInput } from './OtpInput';
 export { RecordCard } from './RecordCard';
 export { Screen } from './Screen';
 export { ScreenHeader } from './ScreenHeader';

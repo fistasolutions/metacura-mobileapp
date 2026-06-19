@@ -12,7 +12,7 @@ A **half-sheet modal** opened by tapping any flagged value or any source pill. T
 
 - **Open from:** record detail (17, a value or summary pill), Ask Doctor answers (20), the answer detail view (22, its in-conversation companion), and anywhere a claim is shown.
 - **Params:** `{ recordId, line? }` — the document to open and the line to highlight.
-- **Magnify:** tap-and-hold to magnify the highlighted region.
+- **Magnify:** tap-and-hold any line to magnify it. A non-interactive overlay enlarges that line (mono for values) with its line number and, for a flagged value, its `StatusPill`; releasing the press dismisses it.
 - **Presentation:** a true bottom sheet with detents (start at half height, drag to full). In the scaffold this is `presentation: 'modal'`; upgrade to a detents sheet (`@gorhom/bottom-sheet` or native `formSheet`) when built. Gesture-driven via `react-native-gesture-handler` + `react-native-reanimated`.
 
 ## Performance bar (non-negotiable)

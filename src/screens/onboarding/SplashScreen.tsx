@@ -3,17 +3,19 @@
  * Auto-advances to Welcome after a short beat. See specs/onboarding.md.
  */
 import React, { useEffect } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../theme';
+
+const LOGO = require('../../assets/images/logo.png');
 
 export default function SplashScreen() {
   const t = useTheme();
   const nav = useNavigation<any>();
 
   useEffect(() => {
-    const id = setTimeout(() => nav.navigate('Welcome'), 1100);
+    const id = setTimeout(() => nav.navigate('Welcome'), 1000);
     return () => clearTimeout(id);
   }, [nav]);
 
@@ -24,6 +26,10 @@ export default function SplashScreen() {
       end={{ x: 1, y: 1 }}
       style={[StyleSheet.absoluteFill, styles.center]}
     >
+      <View style={[styles.logoBadge, t.shadows.lg]}>
+        <Image source={LOGO} style={styles.logo} resizeMode="contain" />
+      </View>
+
       <Text style={{ fontFamily: t.fonts.brand, fontSize: 36, color: t.palette.white }}>
         MetaCura
       </Text>
@@ -45,4 +51,17 @@ export default function SplashScreen() {
 
 const styles = StyleSheet.create({
   center: { alignItems: 'center', justifyContent: 'center' },
+  logoBadge: {
+    width: 104,
+    height: 104,
+    borderRadius: 28,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+  },
+  logo: {
+    width: 72,
+    height: 72,
+  },
 });

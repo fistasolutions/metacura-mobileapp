@@ -17,13 +17,13 @@ export default function ForgotPasswordScreen() {
 
   if (sent) {
     return (
-      <Screen>
-        <ScreenHeader
-          eyebrow="Check your inbox"
-          title="Reset link sent"
-          subtitle="If an account exists for that email, a reset link is on its way."
-        />
-        <View style={{ gap: t.spacing[4] }}>
+      <Screen contentStyle={{ flexGrow: 1 }} edges={['top', 'bottom']}>
+        <View style={{ flex: 1 }}>
+          <ScreenHeader
+            eyebrow="Check your inbox"
+            title="Reset link sent"
+            subtitle="If an account exists for that email, a reset link is on its way."
+          />
           <Card style={{ backgroundColor: t.colors.normalBg, borderColor: t.colors.borderStrong }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: t.spacing[3] }}>
               <CheckCircle2 size={24} color={t.colors.normal} strokeWidth={2.2} />
@@ -32,6 +32,9 @@ export default function ForgotPasswordScreen() {
               </AppText>
             </View>
           </Card>
+
+          {/* Flexible spacer fills the screen so the action sits at the foot. */}
+          <View style={{ flex: 1, minHeight: t.spacing[6] }} />
 
           <Pressable onPress={() => nav.navigate('Login')} accessibilityRole="button" style={{ alignSelf: 'center' }}>
             <AppText variant="secondary" color={t.colors.primary} style={{ fontFamily: t.fonts.bodySemibold }}>
@@ -44,22 +47,28 @@ export default function ForgotPasswordScreen() {
   }
 
   return (
-    <Screen>
-      <ScreenHeader
-        onBack={() => nav.goBack()}
-        eyebrow="Reset"
-        title="Forgot your password?"
-        subtitle="Enter your email and we will send a reset link."
-      />
-      <View style={{ gap: t.spacing[4] }}>
-        <Input
-          label="Email"
-          placeholder="you@email.com"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
+    <Screen contentStyle={{ flexGrow: 1 }} edges={['top', 'bottom']}>
+      <View style={{ flex: 1 }}>
+        <ScreenHeader
+          onBack={() => nav.goBack()}
+          eyebrow="Reset"
+          title="Forgot your password?"
+          subtitle="Enter your email and we will send a reset link."
         />
+        <View style={{ gap: t.spacing[4] }}>
+          <Input
+            label="Email"
+            placeholder="you@email.com"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+        </View>
+
+        {/* Flexible spacer fills the screen so the action sits at the foot. */}
+        <View style={{ flex: 1, minHeight: t.spacing[6] }} />
+
         <Button label="Send reset link" onPress={() => setSent(true)} />
       </View>
     </Screen>

@@ -1,20 +1,21 @@
 // Screen 31 · Profile — see specs/profile.md
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import {
+  BadgeCheck,
   Camera,
-  CheckCircle2,
-  Users,
-  Shield,
   CreditCard,
+  ShieldCheck,
+  Shield,
+  Users,
 } from 'lucide-react-native';
 import {
   Screen,
   Card,
   GlassCard,
   Avatar,
-  Badge,
   Button,
   AppText,
   Section,
@@ -37,84 +38,76 @@ export default function ProfileScreen() {
 
   return (
     <Screen contentStyle={{ gap: t.spacing[6] }}>
-      {/* Profile card */}
-      <Card style={{ gap: t.spacing[5] }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: t.spacing[4] }}>
+      {/* Profile membership card — teal gradient hero */}
+      <LinearGradient
+        colors={[t.colors.gradientStart, t.colors.gradientEnd]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={[styles.hero, { borderRadius: t.radius['3xl'] }, t.shadows.button]}
+      >
+        <ShieldCheck size={118} color="rgba(255,255,255,0.09)" strokeWidth={1.5} style={styles.watermark} />
+        <View pointerEvents="none" style={styles.blobTR} />
+        <View pointerEvents="none" style={styles.blobBL} />
+
+        {/* Identity */}
+        <View style={styles.identity}>
           <View>
-            <Avatar initials={CURRENT_USER.initials} size={72} />
-            <View
-              style={{
-                position: 'absolute',
-                right: -2,
-                bottom: -2,
-                width: 26,
-                height: 26,
-                borderRadius: 13,
-                backgroundColor: t.colors.primary,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderWidth: 2,
-                borderColor: t.colors.surface,
-              }}
-            >
-              <Camera size={13} color={t.colors.textInverse} strokeWidth={2.4} />
+            <Avatar initials={CURRENT_USER.initials} size={50} onPrimary />
+            <View style={[styles.camBadge, { backgroundColor: t.palette.white, borderColor: t.colors.primary }]}>
+              <Camera size={10} color={t.colors.primary} strokeWidth={2.4} />
             </View>
           </View>
-          <View style={{ flex: 1, gap: t.spacing[2] }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: t.spacing[1] }}>
-              <CheckCircle2 size={15} color={t.colors.success} strokeWidth={2.4} />
-              <AppText variant="eyebrow" color={t.colors.success}>
-                VERIFIED
+          <View style={{ flex: 1, gap: 3 }}>
+            <View style={styles.verifiedRow}>
+              <BadgeCheck size={13} color={t.palette.white} strokeWidth={2.4} />
+              <AppText variant="eyebrow" color="rgba(255,255,255,0.9)">
+                VERIFIED · PRIMARY
               </AppText>
             </View>
-            <AppText variant="h2">{CURRENT_USER.fullName}</AppText>
-            <Badge label="Primary Account" variant="success" />
+            <AppText color={t.palette.white} numberOfLines={1} style={{ fontFamily: t.fonts.headingBold, fontSize: t.fontSize.xl }}>
+              {CURRENT_USER.fullName}
+            </AppText>
+            <AppText color="rgba(255,255,255,0.88)" style={{ fontFamily: t.fonts.mono, fontSize: t.fontSize.xs, letterSpacing: 1 }}>
+              {CURRENT_USER.mycareId}
+            </AppText>
           </View>
         </View>
 
-        {/* Feature tags */}
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: t.spacing[2] }}>
+        {/* Feature tags as translucent chips */}
+        <View style={styles.tagRow}>
           {FEATURE_TAGS.map(tag => (
-            <Badge key={tag} label={tag} variant="outline" />
+            <View key={tag} style={[styles.tag, { borderRadius: t.radius.pill }]}>
+              <AppText variant="eyebrow" color={t.palette.white}>
+                {tag.toUpperCase()}
+              </AppText>
+            </View>
           ))}
         </View>
 
+        <View style={styles.divider} />
+
         {/* Info boxes */}
-        <View style={{ flexDirection: 'row', gap: t.spacing[3] }}>
+        <View style={styles.infoRow}>
           {[
             { label: 'Created', value: 'Oct 2024' },
             { label: 'Region', value: 'Global (UTC)' },
           ].map(box => (
-            <View
-              key={box.label}
-              style={{
-                flex: 1,
-                backgroundColor: t.colors.surfaceMuted,
-                borderRadius: t.radius.lg,
-                paddingHorizontal: t.spacing[4],
-                paddingVertical: t.spacing[3],
-                gap: 3,
-              }}
-            >
-              <AppText variant="eyebrow" color={t.colors.textMuted}>
+            <View key={box.label} style={[styles.infoBox, { borderRadius: t.radius.lg }]}>
+              <AppText variant="eyebrow" color="rgba(255,255,255,0.7)">
                 {box.label.toUpperCase()}
               </AppText>
-              <AppText variant="secondary" style={{ fontFamily: t.fonts.bodySemibold }}>
+              <AppText color={t.palette.white} style={{ fontFamily: t.fonts.bodySemibold, fontSize: t.fontSize.sm }}>
                 {box.value}
               </AppText>
             </View>
           ))}
         </View>
-      </Card>
+      </LinearGradient>
 
-      {/* Stats grid, 3 per row, aligned */}
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: t.spacing[3] }}>
+      {/* Stats grid — equal-height crystal tiles, 3 per row */}
+      <View style={styles.statGrid}>
         {PROFILE_STATS.map(stat => (
-          <GlassCard
-            key={stat.label}
-            style={{ width: `${(100 - 2 * 4) / 3}%` }}
-            contentStyle={{ paddingVertical: t.spacing[4], paddingHorizontal: t.spacing[3], gap: 4 }}
-          >
+          <GlassCard key={stat.label} style={styles.statTile} contentStyle={styles.statContent}>
             <AppText style={{ fontFamily: t.fonts.headingBold, fontSize: t.fontSize['2xl'], color: t.colors.text }}>
               {stat.value}
             </AppText>
@@ -149,3 +142,91 @@ export default function ProfileScreen() {
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  hero: {
+    padding: 16,
+    overflow: 'hidden',
+    gap: 14,
+  },
+  watermark: { position: 'absolute', top: -16, right: -18 },
+  blobTR: {
+    position: 'absolute',
+    top: -70,
+    right: -40,
+    width: 190,
+    height: 190,
+    borderRadius: 95,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+  },
+  blobBL: {
+    position: 'absolute',
+    bottom: -60,
+    left: -30,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+  },
+  identity: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+  },
+  camBadge: {
+    position: 'absolute',
+    right: -2,
+    bottom: -2,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+  },
+  verifiedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  tagRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  tag: {
+    backgroundColor: 'rgba(255,255,255,0.16)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+  },
+  infoRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  infoBox: {
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    gap: 2,
+  },
+  statGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  statTile: {
+    width: '31%',
+  },
+  statContent: {
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    gap: 4,
+    minHeight: 92,
+    justifyContent: 'center',
+  },
+});

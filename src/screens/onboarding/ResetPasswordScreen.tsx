@@ -29,35 +29,42 @@ export default function ResetPasswordScreen() {
   };
 
   return (
-    <Screen>
-      <ScreenHeader
-        eyebrow="Reset"
-        title="Set a new password"
-        subtitle="Choose a new password for your MyCare ID."
-      />
-      <View style={{ gap: t.spacing[4] }}>
-        <Input
-          label="New password"
-          placeholder="Create a password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
+    <Screen contentStyle={{ flexGrow: 1 }} edges={['top', 'bottom']}>
+      <View style={{ flex: 1 }}>
+        <ScreenHeader
+          eyebrow="Reset"
+          title="Set a new password"
+          subtitle="Choose a new password for your MyCare ID."
         />
-        <Input
-          label="Confirm password"
-          placeholder="Re-enter your password"
-          value={confirm}
-          onChangeText={setConfirm}
-          secureTextEntry
-        />
+        <View style={{ gap: t.spacing[4] }}>
+          <Input
+            label="New password"
+            placeholder="Create a password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+          <Input
+            label="Confirm password"
+            placeholder="Re-enter your password"
+            value={confirm}
+            onChangeText={setConfirm}
+            secureTextEntry
+          />
+        </View>
 
-        {error ? (
-          <AppText variant="secondary" color={t.colors.high}>
-            {error}
-          </AppText>
-        ) : null}
+        {/* Flexible spacer fills the screen so the action sits at the foot. */}
+        <View style={{ flex: 1, minHeight: t.spacing[6] }} />
 
-        <Button label="Save and log in" onPress={onSubmit} />
+        <View style={{ gap: t.spacing[4] }}>
+          {error ? (
+            <AppText variant="secondary" color={t.colors.high} style={{ textAlign: 'center' }}>
+              {error}
+            </AppText>
+          ) : null}
+
+          <Button label="Save and log in" onPress={onSubmit} />
+        </View>
       </View>
     </Screen>
   );

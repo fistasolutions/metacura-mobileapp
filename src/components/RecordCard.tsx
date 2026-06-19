@@ -37,17 +37,20 @@ export function RecordCard({ record, onPress }: { record: MedicalRecord; onPress
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 12,
-        backgroundColor: t.colors.surface,
-        borderWidth: 1,
-        borderColor: t.colors.border,
-        borderRadius: t.radius.xl,
-        padding: 14,
-        opacity: pressed ? 0.7 : 1,
-      })}
+      style={({ pressed }) => [
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 12,
+          backgroundColor: t.colors.surface,
+          borderWidth: 1,
+          borderColor: t.colors.border,
+          borderRadius: t.radius.xl,
+          padding: 14,
+          opacity: pressed ? 0.7 : 1,
+        },
+        t.shadows.card,
+      ]}
     >
       <IconCircle icon={Icon} tone="teal" size={40} />
       <View style={{ flex: 1 }}>
