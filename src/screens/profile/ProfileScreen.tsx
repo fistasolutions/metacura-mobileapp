@@ -55,7 +55,7 @@ export default function ProfileScreen() {
   const nav = useNavigation<any>();
 
   return (
-    <Screen scroll={false} contentStyle={{ flex: 1, gap: t.spacing[5] }} edges={['top', 'bottom']}>
+    <Screen scroll contentStyle={{ flexGrow: 1, gap: t.spacing[5], paddingBottom: t.spacing[12] * 2 }} edges={['top', 'bottom']}>
       {/* Profile membership card — teal gradient hero */}
       <LinearGradient
         colors={[t.colors.gradientStart, t.colors.gradientEnd]}

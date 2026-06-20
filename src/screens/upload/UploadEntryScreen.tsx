@@ -1,10 +1,8 @@
 /**
- * Screen 12 · Upload entry — camera-first, plus a drag-and-drop dropper. A
- * dashed drop zone sits at the top; below it, draggable document chips can be
- * dragged into the zone to upload (the in-app stand-in for desktop drag-drop).
- * A large gradient "Open Camera" hero, two secondary tiles (Photo Library, PDF),
- * a "Type manually" row, and the encrypted-on-arrival reassurance follow.
- * See specs/upload.md.
+ * Screen 12 · Upload entry — a drag-and-drop dropper plus camera. A dashed drop
+ * zone sits at the top: tap it to upload, or drag a document chip into it (chips
+ * also upload on tap). A large gradient "Open Camera" hero and the
+ * encrypted-on-arrival reassurance follow. See specs/upload.md.
  */
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
@@ -27,11 +25,10 @@ import {
   GripVertical,
   Image as ImageIcon,
   Lock,
-  PenLine,
   UploadCloud,
   LucideIcon,
 } from 'lucide-react-native';
-import { ScreenHeader, AppText, GlassCard, IconCircle } from '../../components';
+import { ScreenHeader, AppText } from '../../components';
 import { useTheme } from '../../theme';
 
 type Rect = { x: number; y: number; w: number; h: number };
@@ -96,6 +93,12 @@ function DocChip({
       runOnJS(onDragEnd)();
     });
 
+  // Tap to upload immediately (drag is the alternative, not a requirement).
+  const tap = Gesture.Tap().onEnd(() => {
+    runOnJS(onDrop)(doc);
+  });
+  const gesture = Gesture.Race(pan, tap);
+
   const style = useAnimatedStyle(() => ({
     transform: [
       { translateX: tx.value },
@@ -107,7 +110,7 @@ function DocChip({
   }));
 
   return (
-    <GestureDetector gesture={pan}>
+    <GestureDetector gesture={gesture}>
       <Animated.View
         onLayout={e => {
           home.value = {
@@ -143,10 +146,12 @@ function DocChip({
 
 function DragDropUpload({
   onDrop,
+  onPick,
   onDragStart,
   onDragEnd,
 }: {
   onDrop: (doc: DropDoc) => void;
+  onPick: () => void;
   onDragStart: () => void;
   onDragEnd: () => void;
 }) {
@@ -180,11 +185,19 @@ function DragDropUpload({
           <UploadCloud size={26} color={t.colors.primary} strokeWidth={2.2} />
         </Animated.View>
         <AppText variant="body" color={t.colors.text} style={{ fontFamily: t.fonts.bodySemibold }}>
-          Drag a file here to upload
+          Tap to upload a file
         </AppText>
         <AppText variant="secondary" color={t.colors.textMuted}>
-          Drop it in the box, or tap a source below
+          Or drag a document below into the box
         </AppText>
+
+        {/* Tapping anywhere in the zone opens the upload. */}
+        <Pressable
+          onPress={onPick}
+          accessibilityRole="button"
+          accessibilityLabel="Upload a file"
+          style={StyleSheet.absoluteFill}
+        />
       </Animated.View>
 
       <View style={styles.chipRow}>
@@ -204,42 +217,6 @@ function DragDropUpload({
   );
 }
 
-/* ── Secondary source tile ─────────────────────────────────────────────── */
-
-function SmallTile({
-  icon: Icon,
-  title,
-  subtitle,
-  onPress,
-}: {
-  icon: LucideIcon;
-  title: string;
-  subtitle: string;
-  onPress: () => void;
-}) {
-  const t = useTheme();
-  return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={title}
-      style={({ pressed }) => [styles.smallWrap, { opacity: pressed ? 0.85 : 1 }]}
-    >
-      <GlassCard contentStyle={styles.smallContent}>
-        <IconCircle icon={Icon} tone="teal" size={42} />
-        <View style={{ gap: 2 }}>
-          <AppText variant="body" style={{ fontFamily: t.fonts.bodySemibold }}>
-            {title}
-          </AppText>
-          <AppText variant="secondary" color={t.colors.textMuted}>
-            {subtitle}
-          </AppText>
-        </View>
-      </GlassCard>
-    </Pressable>
-  );
-}
-
 export default function UploadEntryScreen() {
   const t = useTheme();
   const nav = useNavigation<any>();
@@ -247,6 +224,7 @@ export default function UploadEntryScreen() {
 
   const handleDrop = (doc: DropDoc) =>
     nav.navigate('UploadProgress', { fileName: doc.name });
+  const handlePick = () => nav.navigate('UploadProgress');
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: t.colors.background }} edges={['top', 'bottom']}>
@@ -261,12 +239,13 @@ export default function UploadEntryScreen() {
           eyebrow="Upload"
           title="Add a"
           accent="record."
-          subtitle="Drag a file into the box, or use the camera. Everything arrives encrypted."
+          subtitle="Tap the box to upload, or scan with the camera. Everything arrives encrypted."
         />
 
-        {/* Drag-and-drop dropper */}
+        {/* Drag-and-drop dropper (tap to upload, or drag a chip in) */}
         <DragDropUpload
           onDrop={handleDrop}
+          onPick={handlePick}
           onDragStart={() => setDragging(true)}
           onDragEnd={() => setDragging(false)}
         />
@@ -308,39 +287,6 @@ export default function UploadEntryScreen() {
               <ChevronRight size={15} color={t.colors.primaryStrong} strokeWidth={2.8} />
             </View>
           </LinearGradient>
-        </Pressable>
-
-        {/* Secondary sources */}
-        <View style={{ flexDirection: 'row', gap: t.spacing[3] }}>
-          <SmallTile
-            icon={ImageIcon}
-            title="Photo Library"
-            subtitle="Pick a photo"
-            onPress={() => nav.navigate('UploadProgress')}
-          />
-          <SmallTile
-            icon={FileText}
-            title="PDF or doc"
-            subtitle="Choose a file"
-            onPress={() => nav.navigate('UploadProgress')}
-          />
-        </View>
-
-        {/* Type manually — secondary */}
-        <Pressable
-          onPress={() => nav.navigate('ClassifyConfirm')}
-          accessibilityRole="button"
-          accessibilityLabel="Type manually"
-          style={({ pressed }) => [
-            styles.manual,
-            { backgroundColor: t.colors.surfaceMuted, borderColor: t.colors.borderStrong, borderRadius: t.radius.xl, opacity: pressed ? 0.8 : 1 },
-          ]}
-        >
-          <PenLine size={18} color={t.colors.primary} strokeWidth={2.2} />
-          <AppText variant="secondary" style={{ flex: 1, fontFamily: t.fonts.bodySemibold }}>
-            Type manually
-          </AppText>
-          <ChevronRight size={18} color={t.colors.textMuted} strokeWidth={2.2} />
         </Pressable>
 
         {/* Reassurance */}
@@ -421,22 +367,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingHorizontal: 14,
     paddingVertical: 9,
-  },
-  smallWrap: {
-    flex: 1,
-  },
-  smallContent: {
-    gap: 12,
-    minHeight: 132,
-    justifyContent: 'space-between',
-  },
-  manual: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
   },
   reassure: {
     flexDirection: 'row',

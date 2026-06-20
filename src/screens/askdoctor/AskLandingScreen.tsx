@@ -2,7 +2,7 @@
 // A modern chat surface: a slim header, a centered empty state with suggestion
 // chips, light assistant bubbles (small sparkle avatar + source chips), a teal
 // user bubble, and a pinned composer. Voice is a peer to text.
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -82,6 +82,16 @@ export default function AskLandingScreen() {
     setDraft('');
     scrollToEnd();
   };
+
+  // A voice query hands back its question here; seed the thread as the report.
+  const voiceQuestion: string | undefined = route.params?.voiceQuestion;
+  useEffect(() => {
+    if (voiceQuestion) {
+      ask(voiceQuestion);
+      nav.setParams({ voiceQuestion: undefined });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [voiceQuestion]);
 
   const openSource = (answerId: string) => nav.navigate('AnswerDetail', { answerId });
 

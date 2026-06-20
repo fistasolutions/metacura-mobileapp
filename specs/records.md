@@ -14,12 +14,14 @@ Step 2 of the product spine: understand. The Source sheet (18) is specced separa
 
 ## 17 · Record detail — `RecordDetailScreen.tsx`
 - **Document header** showing source and date.
-- **AI Summary card** with "Linked: N sources" (never "Cited"). The source count is a row of tappable **source pills**.
-- **Values list** below, each flagged **High / Low / Normal** against the user's own history (not generic reference ranges) via [StatusPill](../src/components/StatusPill.tsx).
-- **Every flagged value and every source pill opens the [Source sheet](sourcesheet.md) (18)** to the exact original line. This is the signature interaction.
-- **"Ask about this"** CTA at the bottom routes to Ask Doctor (20) with this record pre-loaded as context (`AskLanding { recordId }`).
+- **Flag overview strip:** three compact stat tiles (High / Low / Normal counts in their status colors), shown for records that carry values.
+- **AI Summary card:** a crystal `GlassCard` headed by a gradient sparkle medallion + "AI Summary" eyebrow. Ends with a tappable "Linked · N sources" pill (never "Cited") that opens the Source sheet.
+- **Values list:** each value is a tappable row with a status dot, label, the user's-own-history range, the mono value, a [StatusPill](../src/components/StatusPill.tsx) (**High / Low / Normal**, not generic reference ranges), a link glyph, and a slim **3-zone range gauge** (low · normal · high) with a marker placed by flag.
+- **Every flagged value and the source pill opens the [Source sheet](sourcesheet.md) (18)** to the exact original line. This is the signature interaction.
+- **Findings** (imaging / visit records): a checklist, each row a teal check medallion.
+- **"Ask about this record"** gradient CTA at the bottom (chat medallion + subtitle) routes to Ask Doctor (20) with this record pre-loaded as context (`AskLanding { recordId }`).
 
-Favor the editorial detail style: mostly white, hairline dividers, one accent, status color only where it carries meaning.
+Favor a rich but calm editorial style: white/glass surfaces, hairline dividers, teal as the single accent, status color only where it carries meaning.
 
 ## 19 · Empty state, new user — `RecordsEmptyScreen.tsx`
 Shown when the user has zero records. "Upload your first document to get started." Big **Open Camera** CTA reaching the Upload module (12). This is also referenced by Home (11) and listed in [states.md](states.md).

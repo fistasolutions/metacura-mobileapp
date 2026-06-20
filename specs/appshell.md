@@ -16,7 +16,9 @@ Four tabs, always present on authenticated screens: **Home · Records · Ask Doc
 
 ## Floating microphone
 
-Voice is a peer to text. A circular gradient FAB ([FloatingMic.tsx](../src/components/FloatingMic.tsx)) sits bottom-right above the tab bar on every tab and opens `AskTab → VoiceQuery`. It uses the primary teal→cyan gradient and the `shadows.button` glow. Replace the emoji glyph with the mic icon when the icon set is wired.
+Voice is a peer to text. A circular gradient FAB ([FloatingMic.tsx](../src/components/FloatingMic.tsx)) sits bottom-right above the tab bar and opens `AskTab → VoiceQuery`. It uses the primary teal→cyan gradient and the `shadows.button` glow. Replace the emoji glyph with the mic icon when the icon set is wired.
+
+The FAB is **hidden on the Ask Doctor screens** (`AskLanding`, `VoiceQuery`, `AnswerDetail`) — those already carry their own voice affordance (the chat composer's mic / the voice capture screen), so the global FAB would only overlap the composer's send button. It is also hidden on the immersive `CameraScanner` (where the whole chrome, tab bar included, is hidden).
 
 ## Safe area
 

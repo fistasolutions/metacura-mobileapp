@@ -9,7 +9,7 @@ Mobile-native, single-screen sign-up. No multi-step wizard. All copy obeys the [
 ---
 
 ## 01 · Splash — `SplashScreen.tsx`
-The MetaCura brand logo mark (`src/assets/images/logo.png`, the teal "M", shared with the web app's `public/logo.png`) on a white rounded app-icon badge, above the Syne "MetaCura" wordmark and the tagline "MyCare ID, your personal health ID." Auto-advances to the Welcome carousel after one second. Teal gradient surface, teal accent. No buttons.
+The MetaCura brand logo medallion (`src/assets/images/metacura-logo.png`, the gold heartbeat-heart emblem with a transparent background, shared with the web app's `public/metacura-logo.png`) sitting directly on the gradient (no badge), above the Syne "MetaCura" wordmark and the tagline "MyCare ID, your personal health ID." Auto-advances to the Welcome carousel after one second. Teal gradient surface, teal accent. No buttons.
 
 ## 02 · Welcome carousel — `OnboardingCarousel.tsx`
 Four short swipeable slides over a soft teal ambient field, ending in the three entry actions. The first slide sets the design baseline; the others share the identical layout, spacing, colors, and component language (theme tokens only, no new hues). Each slide pairs a floating-card illustration (composed from the white card / `StatusPill` / source-pill language) with a white sheet anchored low: a teal eyebrow, an Outfit headline whose trailing word is the teal accent, a one-line value statement, and page dots. The illustration sits inside a fixed-size **Stage** that is vertically centered in the space above the sheet (no top-clustering / dead space) with a soft teal glow behind it.

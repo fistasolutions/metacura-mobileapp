@@ -140,6 +140,11 @@ const TAB_LABEL: Record<keyof AppTabsParamList, string> = {
 // Routes that take over the full screen: the app chrome (tab bar + FloatingMic)
 // is hidden so they read as immersive surfaces.
 const IMMERSIVE_ROUTES = ['CameraScanner'];
+// The Ask Doctor tab already carries its own voice affordance everywhere (the
+// chat composer's mic, the full-screen voice capture), so the global FloatingMic
+// is hidden across that whole tab — otherwise it overlaps the composer / send
+// button. The tab bar stays.
+const MIC_HIDDEN_TAB = 'AskTab';
 
 function deepestRouteName(state?: any): string | undefined {
   if (!state || typeof state.index !== 'number') return undefined;
@@ -147,19 +152,28 @@ function deepestRouteName(state?: any): string | undefined {
   return (route?.state && deepestRouteName(route.state)) || route?.name;
 }
 
+function activeTabName(state?: any): string | undefined {
+  if (!state || typeof state.index !== 'number') return undefined;
+  return state.routes[state.index]?.name;
+}
+
 export function AppTabs() {
   const t = useTheme();
   const rootNav =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [immersive, setImmersive] = useState(false);
+  const [hideMic, setHideMic] = useState(false);
 
   return (
     <View style={{ flex: 1 }}>
       <Tab.Navigator
         screenListeners={{
           state: e => {
-            const leaf = deepestRouteName((e.data as any)?.state);
-            setImmersive(!!leaf && IMMERSIVE_ROUTES.includes(leaf));
+            const s = (e.data as any)?.state;
+            const leaf = deepestRouteName(s);
+            const isImmersive = !!leaf && IMMERSIVE_ROUTES.includes(leaf);
+            setImmersive(isImmersive);
+            setHideMic(isImmersive || activeTabName(s) === MIC_HIDDEN_TAB);
           },
         }}
         screenOptions={({ route }) => ({
@@ -186,7 +200,7 @@ export function AppTabs() {
         <Tab.Screen name="AskTab" component={AskStackNavigator} />
         <Tab.Screen name="ProfileTab" component={ProfileStackNavigator} />
       </Tab.Navigator>
-      {immersive ? null : (
+      {hideMic ? null : (
         <FloatingMic
           onPress={() =>
             rootNav.navigate('App', {

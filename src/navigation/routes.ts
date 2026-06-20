@@ -42,7 +42,7 @@ export type RecordsStackParamList = {
 
 // ---- Ask Doctor tab (Module F) ----
 export type AskStackParamList = {
-  AskLanding: { recordId?: string } | undefined; // 20
+  AskLanding: { recordId?: string; voiceQuestion?: string } | undefined; // 20
   VoiceQuery: undefined; // 21
   AnswerDetail: { answerId: string } | undefined; // 22
 };

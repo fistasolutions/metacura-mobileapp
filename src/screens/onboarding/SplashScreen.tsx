@@ -3,12 +3,12 @@
  * Auto-advances to Welcome after a short beat. See specs/onboarding.md.
  */
 import React, { useEffect } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../theme';
 
-const LOGO = require('../../assets/images/logo.png');
+const LOGO = require('../../assets/images/metacura-logo.png');
 
 export default function SplashScreen() {
   const t = useTheme();
@@ -26,9 +26,7 @@ export default function SplashScreen() {
       end={{ x: 1, y: 1 }}
       style={[StyleSheet.absoluteFill, styles.center]}
     >
-      <View style={[styles.logoBadge, { backgroundColor: t.palette.white }, t.shadows.lg]}>
-        <Image source={LOGO} style={styles.logo} resizeMode="contain" />
-      </View>
+      <Image source={LOGO} style={styles.logo} resizeMode="contain" />
 
       <Text style={{ fontFamily: t.fonts.brand, fontSize: 36, color: t.palette.white }}>
         MetaCura
@@ -51,16 +49,9 @@ export default function SplashScreen() {
 
 const styles = StyleSheet.create({
   center: { alignItems: 'center', justifyContent: 'center' },
-  logoBadge: {
-    width: 104,
-    height: 104,
-    borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 24,
-  },
   logo: {
-    width: 72,
-    height: 72,
+    width: 132,
+    height: 132,
+    marginBottom: 24,
   },
 });

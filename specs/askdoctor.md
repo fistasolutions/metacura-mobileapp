@@ -15,7 +15,12 @@ A modern chat surface (ChatGPT / Claude feel), concise, never heavy boxes:
 - **Persistent conversation view** (the thread survives across sessions). Reached from a record's "Ask about this" with `{ recordId }` pre-loaded as context (shown as an "Asking about:" chip).
 
 ## 21 · Voice query — `VoiceQueryScreen.tsx`
-Full-screen microphone view with live transcription and a waveform animation (Reanimated). A cancel option. On release, the transcription confirms and the answer streams back, with the option to play it as audio. Reached from the composer mic and from the shell **FloatingMic** on any tab.
+Full-screen voice conversation (a peer to text), reached from the composer mic and the shell **FloatingMic** on any tab. It runs through phases with a gradient orb, a pulsing halo, and a Reanimated waveform:
+1. **Listening** — a live transcription grows as you speak ("Why is my LDL high?").
+2. **Reading your record** — a brief thinking beat.
+3. **Speaking** — the assistant **replies in voice**: the orb switches to a speaker, the waveform animates, and the answer (drawn only from the record) streams in word by word in an "Answer · from your record" card.
+
+When the conversation ends (the reply finishes, or the user taps the stop control) it routes to the **report**: the Ask Doctor thread (20), seeded via `AskLanding { voiceQuestion }` so the spoken Q&A appears as the conversation transcript, with the source chip and a Play affordance to replay as audio. Real speech-to-text / text-to-speech are native deps; this screen simulates the experience. A cancel (✕) dismisses without a report.
 
 ## 22 · Answer detail expanded — `AnswerDetailScreen.tsx`
 Tap a source pill on any answer to open this: the full original document scrolled to the line that produced the answer, plus surrounding context for clinical interpretation. Functionally a companion to the [Source sheet](sourcesheet.md) (18), reached from the conversation flow rather than the record-detail flow. Share the document-viewer component.
