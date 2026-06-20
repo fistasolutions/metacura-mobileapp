@@ -5,11 +5,16 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import {
   BadgeCheck,
+  Building2,
   Camera,
   CreditCard,
+  FileText,
+  Receipt,
+  Share2,
   ShieldCheck,
   Shield,
   Users,
+  LucideIcon,
 } from 'lucide-react-native';
 import {
   Screen,
@@ -18,11 +23,24 @@ import {
   Avatar,
   Button,
   AppText,
+  IconCircle,
   Section,
   SettingRow,
 } from '../../components';
 import { useTheme } from '../../theme';
 import { CURRENT_USER, PROFILE_STATS } from '../../data';
+
+// An icon for each profile metric, keyed by a word in its label.
+function statIcon(label: string): LucideIcon {
+  const l = label.toLowerCase();
+  if (l.includes('record')) return FileText;
+  if (l.includes('clinic')) return Building2;
+  if (l.includes('mycare')) return Users;
+  if (l.includes('secured')) return ShieldCheck;
+  if (l.includes('share')) return Share2;
+  if (l.includes('spend')) return Receipt;
+  return FileText;
+}
 
 const FEATURE_TAGS = ['E2E Encrypted', 'Zero-Knowledge', 'No Ads', 'Pay-as-you-go'];
 
@@ -37,7 +55,7 @@ export default function ProfileScreen() {
   const nav = useNavigation<any>();
 
   return (
-    <Screen contentStyle={{ gap: t.spacing[6] }}>
+    <Screen scroll={false} contentStyle={{ flex: 1, gap: t.spacing[5] }} edges={['top', 'bottom']}>
       {/* Profile membership card — teal gradient hero */}
       <LinearGradient
         colors={[t.colors.gradientStart, t.colors.gradientEnd]}
@@ -104,11 +122,12 @@ export default function ProfileScreen() {
         </View>
       </LinearGradient>
 
-      {/* Stats grid — equal-height crystal tiles, 3 per row */}
+      {/* Stats grid — three key crystal tiles, one row */}
       <View style={styles.statGrid}>
-        {PROFILE_STATS.map(stat => (
+        {PROFILE_STATS.slice(0, 3).map(stat => (
           <GlassCard key={stat.label} style={styles.statTile} contentStyle={styles.statContent}>
-            <AppText style={{ fontFamily: t.fonts.headingBold, fontSize: t.fontSize['2xl'], color: t.colors.text }}>
+            <IconCircle icon={statIcon(stat.label)} size={30} tone="teal" radius={10} />
+            <AppText style={{ fontFamily: t.fonts.headingBold, fontSize: t.fontSize.xl, color: t.colors.text }}>
               {stat.value}
             </AppText>
             <AppText variant="eyebrow" color={t.colors.textMuted} numberOfLines={2}>
@@ -134,8 +153,11 @@ export default function ProfileScreen() {
         </Card>
       </Section>
 
+      {/* Flexible spacer keeps the actions at the foot without scrolling. */}
+      <View style={{ flex: 1, minHeight: t.spacing[4] }} />
+
       {/* Bottom actions */}
-      <View style={{ gap: t.spacing[3] }}>
+      <View style={{ gap: t.spacing[2] }}>
         <Button label="Switch Profile" variant="outline" onPress={() => nav.navigate('ProfileSwitcher')} />
         <Button label="Sign Out" variant="ghost" onPress={() => nav.navigate('Auth')} />
       </View>
@@ -223,10 +245,10 @@ const styles = StyleSheet.create({
     width: '31%',
   },
   statContent: {
-    paddingVertical: 16,
+    paddingVertical: 14,
     paddingHorizontal: 12,
-    gap: 4,
-    minHeight: 92,
-    justifyContent: 'center',
+    gap: 7,
+    minHeight: 116,
+    justifyContent: 'flex-start',
   },
 });

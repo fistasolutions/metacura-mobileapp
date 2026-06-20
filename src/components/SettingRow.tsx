@@ -34,17 +34,21 @@ export function SettingRow({
       style={({ pressed }) => ({
         flexDirection: 'row',
         alignItems: 'center',
-        gap: t.spacing[4],
-        paddingHorizontal: t.spacing[5],
-        paddingVertical: t.spacing[4],
+        gap: t.spacing[3] + 2,
+        paddingHorizontal: t.spacing[4],
+        paddingVertical: t.spacing[3] + 4,
         borderTopWidth: first ? 0 : 1,
         borderTopColor: t.colors.border,
         backgroundColor: pressed ? t.colors.surfaceMuted : 'transparent',
       })}
     >
-      <IconCircle icon={icon} size={40} tone={danger ? 'high' : 'teal'} />
-      <View style={{ flex: 1, gap: 2 }}>
-        <AppText variant="cardTitle" color={danger ? t.colors.high : t.colors.text}>
+      <IconCircle icon={icon} size={42} tone={danger ? 'high' : 'teal'} radius={13} />
+      <View style={{ flex: 1, gap: 1 }}>
+        <AppText
+          variant="body"
+          color={danger ? t.colors.high : t.colors.text}
+          style={{ fontFamily: t.fonts.bodySemibold }}
+        >
           {title}
         </AppText>
         {subtitle ? (
@@ -53,7 +57,20 @@ export function SettingRow({
           </AppText>
         ) : null}
       </View>
-      {trailing ?? <ChevronRight size={20} color={t.colors.textMuted} strokeWidth={2.2} />}
+      {trailing ?? (
+        <View
+          style={{
+            width: 28,
+            height: 28,
+            borderRadius: 14,
+            backgroundColor: t.colors.surfaceMuted,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <ChevronRight size={16} color={t.colors.textMuted} strokeWidth={2.4} />
+        </View>
+      )}
     </Pressable>
   );
 }

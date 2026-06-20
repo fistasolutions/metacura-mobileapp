@@ -15,14 +15,15 @@ import {
   SectionEyebrow,
   Sheet,
 } from '../../components';
-import { useTheme } from '../../theme';
+import { useTheme, useThemeMode } from '../../theme';
 
 export default function PrivacyDataScreen() {
   const t = useTheme();
   const nav = useNavigation<any>();
+  const { mode, setPreference } = useThemeMode();
   const [biometrics, setBiometrics] = useState(true);
   const [twoFactor, setTwoFactor] = useState(false);
-  const [darkMode, setDarkMode] = useState(t.mode === 'dark');
+  const darkMode = mode === 'dark';
   const [deleting, setDeleting] = useState(false);
   const [confirmText, setConfirmText] = useState('');
 
@@ -75,7 +76,15 @@ export default function PrivacyDataScreen() {
           {/* Appearance */}
           <View style={{ gap: t.spacing[3] }}>
             <SectionEyebrow label="Appearance" />
-            <Card>{toggleRow(Moon, 'Dark mode theme', 'Follows your system setting', darkMode, setDarkMode)}</Card>
+            <Card>
+              {toggleRow(
+                Moon,
+                'Dark mode theme',
+                darkMode ? 'Dark theme is on' : 'Switch the whole app to dark',
+                darkMode,
+                v => setPreference(v ? 'dark' : 'light'),
+              )}
+            </Card>
           </View>
 
           {/* Export & Delete */}

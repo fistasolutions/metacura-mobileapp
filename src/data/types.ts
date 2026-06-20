@@ -103,3 +103,28 @@ export type Dependent = {
   added: string;
   isPrimary: boolean;
 };
+
+// Sample detail content backing the Family member detail screen (32a).
+// Mirrors the web DependentDashboard's managed-member overview.
+export type DataCompositionItem = {
+  label: string;
+  value: string;
+  unit: string;
+  stat: string;
+  tone: 'normal' | 'low' | 'high';
+};
+
+export type DelegatedAccess = {
+  name: string;
+  role: string;
+  access: string;
+  temporary: boolean;
+  initials: string;
+};
+
+export type DependentDetail = {
+  emergency: { bloodType: string; allergies: string; primaryContact: string };
+  latestInsight: { date: string; text: string };
+  dataComposition: DataCompositionItem[];
+  delegatedAccess: DelegatedAccess[];
+};

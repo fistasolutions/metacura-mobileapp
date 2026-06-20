@@ -1,4 +1,4 @@
-import { Dependent, Receipt, ShareLink } from './types';
+import { Dependent, DependentDetail, Receipt, ShareLink } from './types';
 
 export const CURRENT_USER = {
   fullName: 'Sarah Jenkins',
@@ -63,6 +63,29 @@ export const DEPENDENTS: Dependent[] = [
     isPrimary: false,
   },
 ];
+
+// Sample managed-member overview shown on the Family member detail screen (32a).
+export const DEPENDENT_DETAIL: DependentDetail = {
+  emergency: {
+    bloodType: 'O Positive',
+    allergies: 'Penicillin',
+    primaryContact: 'Sarah · Mother',
+  },
+  latestInsight: {
+    date: 'Dec 10',
+    text: 'Annual physical review · all metabolic markers are normal. The next required vaccination (DTaP) is due in 3 months based on current guidelines.',
+  },
+  dataComposition: [
+    { label: 'Clinical Notes', value: '120', unit: 'docs', stat: 'Normal', tone: 'normal' },
+    { label: 'Lab Results', value: '62', unit: 'panels', stat: 'Low', tone: 'low' },
+    { label: 'Imaging', value: '12', unit: 'scans', stat: 'High', tone: 'high' },
+    { label: 'Prescriptions', value: '45', unit: 'meds', stat: 'Normal', tone: 'normal' },
+  ],
+  delegatedAccess: [
+    { name: 'William Davis', role: 'Co-Parent', access: 'Full Access', temporary: false, initials: 'WD' },
+    { name: 'Lincoln High School', role: 'School Nurse', access: 'Temporary', temporary: true, initials: 'LH' },
+  ],
+};
 
 export const RECEIPTS: Receipt[] = [
   { id: 'r1', title: 'Second Opinion Report', date: 'May 28, 2026', plan: 'Second Opinion', status: 'Paid', amount: '$4.00' },

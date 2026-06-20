@@ -35,6 +35,7 @@ import VoiceQueryScreen from '../screens/askdoctor/VoiceQueryScreen';
 import AnswerDetailScreen from '../screens/askdoctor/AnswerDetailScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import FamilyDependentsScreen from '../screens/profile/FamilyDependentsScreen';
+import FamilyMemberDetailScreen from '../screens/profile/FamilyMemberDetailScreen';
 import ProfileSwitcherScreen from '../screens/profile/ProfileSwitcherScreen';
 import PrivacyDataScreen from '../screens/profile/PrivacyDataScreen';
 import ReceiptsBillingScreen from '../screens/profile/ReceiptsBillingScreen';
@@ -97,6 +98,10 @@ function ProfileStackNavigator() {
       <ProfileStack.Screen
         name="FamilyDependents"
         component={FamilyDependentsScreen}
+      />
+      <ProfileStack.Screen
+        name="FamilyMemberDetail"
+        component={FamilyMemberDetailScreen}
       />
       <ProfileStack.Screen
         name="ProfileSwitcher"

@@ -30,7 +30,7 @@ Four tabs, each its own native-stack so detail screens push within the tab:
 | `HomeTab` | HomeStack | `HomeDashboard` (11) |
 | `RecordsTab` | RecordsStack | `RecordsTimeline` (16), `RecordDetail` (17), `RecordsEmpty` (19), and the Upload flow `UploadEntry` (12) → `CameraScanner` (13) → `UploadProgress` (14) → `ClassifyConfirm` (15) |
 | `AskTab` | AskStack | `AskLanding` (20), `VoiceQuery` (21), `AnswerDetail` (22) |
-| `ProfileTab` | ProfileStack | `Profile` (31), `FamilyDependents` (32), `ProfileSwitcher` (33), `PrivacyData` (34), `ReceiptsBilling` (35), plus share/export/audit `ShareWithClinician` (28), `ExportData` (29), `AuditTrail` (30) |
+| `ProfileTab` | ProfileStack | `Profile` (31), `FamilyDependents` (32), `FamilyMemberDetail` (32a, param `dependentId`), `ProfileSwitcher` (33), `PrivacyData` (34), `ReceiptsBilling` (35), plus share/export/audit `ShareWithClinician` (28), `ExportData` (29), `AuditTrail` (30) |
 
 A **FloatingMic** overlay sits above the tab bar on every tab and routes to `AskTab → VoiceQuery` (voice is a peer to text).
 

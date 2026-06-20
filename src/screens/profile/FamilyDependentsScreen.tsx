@@ -1,6 +1,6 @@
 // Screen 32 · Family & dependents — see specs/profile.md
 import React, { useState } from 'react';
-import { Modal, View } from 'react-native';
+import { Modal, Pressable, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ChevronRight } from 'lucide-react-native';
 import {
@@ -59,24 +59,32 @@ export default function FamilyDependentsScreen() {
 
         <View style={{ gap: t.spacing[3] }}>
           {DEPENDENTS.map(d => (
-            <Card key={d.id}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: t.spacing[4] }}>
-                <Avatar initials={initialsOf(d.name)} size={48} />
-                <View style={{ flex: 1, gap: 4 }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: t.spacing[2], flexWrap: 'wrap' }}>
-                    <AppText variant="cardTitle">{d.name}</AppText>
-                    <Badge label={d.relationship} variant="success" />
+            <Pressable
+              key={d.id}
+              accessibilityRole="button"
+              accessibilityLabel={`Open ${d.name}`}
+              onPress={() => nav.navigate('FamilyMemberDetail', { dependentId: d.id })}
+              style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+            >
+              <Card>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: t.spacing[4] }}>
+                  <Avatar initials={initialsOf(d.name)} size={48} />
+                  <View style={{ flex: 1, gap: 4 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: t.spacing[2], flexWrap: 'wrap' }}>
+                      <AppText variant="cardTitle">{d.name}</AppText>
+                      <Badge label={d.relationship} variant="success" />
+                    </View>
+                    <AppText variant="mono" color={t.colors.textMuted}>
+                      {d.mycareId}
+                    </AppText>
+                    <AppText variant="secondary" color={t.colors.textMuted}>
+                      {d.records} records · {d.focus}
+                    </AppText>
                   </View>
-                  <AppText variant="mono" color={t.colors.textMuted}>
-                    {d.mycareId}
-                  </AppText>
-                  <AppText variant="secondary" color={t.colors.textMuted}>
-                    {d.records} records · {d.focus}
-                  </AppText>
+                  <ChevronRight size={20} color={t.colors.textMuted} strokeWidth={2.2} />
                 </View>
-                <ChevronRight size={20} color={t.colors.textMuted} strokeWidth={2.2} />
-              </View>
-            </Card>
+              </Card>
+            </Pressable>
           ))}
         </View>
       </Screen>

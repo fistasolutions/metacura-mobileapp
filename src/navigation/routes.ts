@@ -51,6 +51,7 @@ export type AskStackParamList = {
 export type ProfileStackParamList = {
   Profile: undefined; // 31
   FamilyDependents: undefined; // 32
+  FamilyMemberDetail: { dependentId: string }; // 32a — managed-member overview
   ProfileSwitcher: undefined; // 33
   PrivacyData: undefined; // 34
   ReceiptsBilling: undefined; // 35

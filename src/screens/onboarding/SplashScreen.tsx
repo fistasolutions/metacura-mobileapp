@@ -21,12 +21,12 @@ export default function SplashScreen() {
 
   return (
     <LinearGradient
-      colors={[t.colors.primaryStrong, '#0e7490']}
+      colors={[t.colors.primaryStrong, t.colors.primary]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={[StyleSheet.absoluteFill, styles.center]}
     >
-      <View style={[styles.logoBadge, t.shadows.lg]}>
+      <View style={[styles.logoBadge, { backgroundColor: t.palette.white }, t.shadows.lg]}>
         <Image source={LOGO} style={styles.logo} resizeMode="contain" />
       </View>
 
@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
     width: 104,
     height: 104,
     borderRadius: 28,
-    backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 24,

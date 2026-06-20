@@ -46,4 +46,4 @@ export * from './colors';
 export * from './spacing';
 export * from './shadows';
 export * from './typography';
-export { ThemeProvider, useTheme } from './ThemeProvider';
+export { ThemeProvider, useTheme, useThemeMode } from './ThemeProvider';
