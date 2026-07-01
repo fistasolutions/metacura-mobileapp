@@ -17,7 +17,7 @@ type Props = TextInputProps & {
   containerStyle?: StyleProp<ViewStyle>;
 };
 
-export function Input({ label, containerStyle, style, ...rest }: Props) {
+export function Input({ label, containerStyle, style, onFocus, onBlur, ...rest }: Props) {
   const t = useTheme();
   const [focused, setFocused] = useState(false);
   return (
@@ -29,8 +29,14 @@ export function Input({ label, containerStyle, style, ...rest }: Props) {
       ) : null}
       <TextInput
         placeholderTextColor={t.colors.textMuted}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
+        onFocus={e => {
+          setFocused(true);
+          onFocus?.(e);
+        }}
+        onBlur={e => {
+          setFocused(false);
+          onBlur?.(e);
+        }}
         style={[
           {
             borderWidth: 1.5,

@@ -3,7 +3,7 @@
  * Tree (see specs/navigation.md):
  *   RootStack
  *     ├─ Auth (AuthNavigator)        — pre-auth + onboarding + public demo
- *     ├─ App  (AppTabs)              — Home · Records · Ask Doctor · Profile
+ *     ├─ App  (AppTabs)              — Home · Records · Ask Doctor · Reports · Profile
  *     └─ modal screens              — Source sheet, Reports hub, Payment, Share
  *
  * Each tab is its own native-stack so detail screens push within the tab.
@@ -14,7 +14,7 @@ export type AuthStackParamList = {
   Splash: undefined; // 01
   Welcome: undefined; // 02 — welcome carousel
   SignUp: { plan?: 'summary' | 'insights' | 'opinion' } | undefined; // 03
-  VerifyEmail: { email?: string; phone?: string } | undefined; // 04
+  VerifyEmail: { identifier?: string; email?: string; phone?: string } | undefined; // 04
   Login: undefined; // 05
   ForgotPassword: undefined; // 06
   ResetPassword: { token?: string } | undefined; // 07
@@ -65,7 +65,13 @@ export type AppTabsParamList = {
   HomeTab: undefined;
   RecordsTab: undefined;
   AskTab: undefined;
+  ReportsTab: undefined;
   ProfileTab: undefined;
+};
+
+// ---- Reports tab (Module G) ----
+export type ReportsStackParamList = {
+  ReportsHubTab: undefined; // 23 — hub, reached as a primary tab
 };
 
 // ---- Root ----

@@ -57,12 +57,12 @@ export default function LoginScreen() {
           <Divider label="or" />
 
           <Input
-            label="Email"
-            placeholder="you@email.com"
+            label="Email or phone number"
+            placeholder="you@email.com or +1 415 555 0132"
             value={email}
             onChangeText={setEmail}
-            keyboardType="email-address"
             autoCapitalize="none"
+            autoCorrect={false}
           />
           <Input
             label="Password"

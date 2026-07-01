@@ -4,11 +4,11 @@
 
 ---
 
-The shell is the persistent frame around every authenticated screen: the four-tab bottom bar, the floating microphone, safe-area handling, and the light/dark surface.
+The shell is the persistent frame around every authenticated screen: the five-tab bottom bar, the floating microphone, safe-area handling, and the light/dark surface.
 
 ## Bottom tab bar
 
-Four tabs, always present on authenticated screens: **Home · Records · Ask Doctor · Profile**. Built with `@react-navigation/bottom-tabs`.
+Five tabs, always present on authenticated screens: **Home · Records · Ask Doctor · Reports · Profile**. Built with `@react-navigation/bottom-tabs`. Reports is a primary tab so the pay-as-you-go report tiers (Module G) are always one tap away, mirroring the web's top-level Reports nav item.
 
 - Active tint `colors.primary`, inactive `colors.textMuted`; bar background `colors.surface` with a hairline top border `colors.border`.
 - Labels in `fonts.bodyMedium`, 11px. Icons are placeholder glyphs in the scaffold; replace with a proper icon set (e.g. `react-native-vector-icons` or `lucide-react-native`) matching the web's lucide icons at a medium stroke weight.

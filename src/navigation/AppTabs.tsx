@@ -1,6 +1,6 @@
 /**
- * AppTabs — the four bottom tabs present on every authenticated screen:
- * Home · Records · Ask Doctor · Profile. Plus a FloatingMic overlay that opens
+ * AppTabs — the five bottom tabs present on every authenticated screen:
+ * Home · Records · Ask Doctor · Reports · Profile. Plus a FloatingMic overlay that opens
  * a voice query from any tab. Each tab is its own native-stack so detail screens
  * push within the tab. See specs/appshell.md.
  */
@@ -18,6 +18,7 @@ import {
   HomeStackParamList,
   ProfileStackParamList,
   RecordsStackParamList,
+  ReportsStackParamList,
   RootStackParamList,
 } from './routes';
 
@@ -30,6 +31,7 @@ import UploadEntryScreen from '../screens/upload/UploadEntryScreen';
 import CameraScannerScreen from '../screens/upload/CameraScannerScreen';
 import UploadProgressScreen from '../screens/upload/UploadProgressScreen';
 import ClassifyConfirmScreen from '../screens/upload/ClassifyConfirmScreen';
+import ReportsHubScreen from '../screens/reports/ReportsHubScreen';
 import AskLandingScreen from '../screens/askdoctor/AskLandingScreen';
 import VoiceQueryScreen from '../screens/askdoctor/VoiceQueryScreen';
 import AnswerDetailScreen from '../screens/askdoctor/AnswerDetailScreen';
@@ -90,6 +92,15 @@ function AskStackNavigator() {
   );
 }
 
+const ReportsStack = createNativeStackNavigator<ReportsStackParamList>();
+function ReportsStackNavigator() {
+  return (
+    <ReportsStack.Navigator screenOptions={{ headerShown: false }}>
+      <ReportsStack.Screen name="ReportsHubTab" component={ReportsHubScreen} />
+    </ReportsStack.Navigator>
+  );
+}
+
 const ProfileStack = createNativeStackNavigator<ProfileStackParamList>();
 function ProfileStackNavigator() {
   return (
@@ -128,12 +139,14 @@ const TAB_GLYPH: Record<keyof AppTabsParamList, string> = {
   HomeTab: '⌂',
   RecordsTab: '▤',
   AskTab: '✦',
+  ReportsTab: '⚗',
   ProfileTab: '◉',
 };
 const TAB_LABEL: Record<keyof AppTabsParamList, string> = {
   HomeTab: 'Home',
   RecordsTab: 'Records',
   AskTab: 'Ask Doctor',
+  ReportsTab: 'Reports',
   ProfileTab: 'Profile',
 };
 
@@ -198,6 +211,7 @@ export function AppTabs() {
         <Tab.Screen name="HomeTab" component={HomeStackNavigator} />
         <Tab.Screen name="RecordsTab" component={RecordsStackNavigator} />
         <Tab.Screen name="AskTab" component={AskStackNavigator} />
+        <Tab.Screen name="ReportsTab" component={ReportsStackNavigator} />
         <Tab.Screen name="ProfileTab" component={ProfileStackNavigator} />
       </Tab.Navigator>
       {hideMic ? null : (

@@ -88,7 +88,13 @@ export function OtpInput({ value, onChangeText, length = 6, autoFocus }: Props) 
         );
       })}
 
-      {/* Hidden field that actually captures input (covers the row for taps). */}
+      {/*
+        Field that actually captures input. Taps are handled by the Pressable, so
+        this only needs to be focusable. It is a 1x1 on-screen box (its text is
+        clipped out of view) rather than opacity:0 — Android treats a zero-opacity
+        input as off-screen and dismisses the soft keyboard while you type, while
+        `color: transparent` alone leaks the raw digits on some keyboards (MIUI).
+      */}
       <TextInput
         ref={inputRef}
         value={value}
@@ -97,6 +103,9 @@ export function OtpInput({ value, onChangeText, length = 6, autoFocus }: Props) 
         maxLength={length}
         autoFocus={autoFocus}
         caretHidden
+        selectionColor="transparent"
+        underlineColorAndroid="transparent"
+        contextMenuHidden
         textContentType="oneTimeCode"
         autoComplete="one-time-code"
         onFocus={() => setFocused(true)}
@@ -128,9 +137,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    right: 0,
-    bottom: 0,
-    opacity: 0,
+    width: 1,
+    height: 1,
+    padding: 0,
     color: 'transparent',
+    backgroundColor: 'transparent',
+    overflow: 'hidden',
   },
 });

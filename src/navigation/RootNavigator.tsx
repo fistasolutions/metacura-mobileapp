@@ -1,8 +1,8 @@
 /**
  * RootNavigator — top of the tree. Switches between the Auth flow and the
- * authenticated App (4 tabs), and hosts the cross-tab modal screens: the
- * signature Source sheet (18), the Reports hub + report screens (23-26), and
- * the Payment sheet (27). See specs/navigation.md.
+ * authenticated App (5 tabs), and hosts the cross-tab screens: the signature
+ * Source sheet (18, a slide-up modal) plus the full-page Reports hub + report
+ * screens (23-26) and Payment sheet (27). See specs/navigation.md.
  *
  * Auth state is not wired yet (scaffold). `initialRouteName` is Auth so the app
  * boots into Splash; flip to "App" to jump straight into the tabs while building.
@@ -30,9 +30,14 @@ export function RootNavigator() {
       <Stack.Screen name="Auth" component={AuthNavigator} />
       <Stack.Screen name="App" component={AppTabs} />
 
-      {/* Modal / sheet group, reachable from multiple tabs */}
+      {/* The Source sheet is a true slide-up modal (the signature interaction). */}
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="SourceSheet" component={SourceSheetScreen} />
+      </Stack.Group>
+
+      {/* Module G — Reports + payment are full-page pushes, reachable from
+          multiple tabs (Home card, Family detail, the Reports tab). */}
+      <Stack.Group>
         <Stack.Screen name="ReportsHub" component={ReportsHubScreen} />
         <Stack.Screen name="SummaryReport" component={SummaryReportScreen} />
         <Stack.Screen

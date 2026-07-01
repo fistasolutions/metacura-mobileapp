@@ -24,7 +24,9 @@ export default function ProfileSetupScreen() {
       return;
     }
     setError('');
-    nav.navigate('App');
+    // Land new sign-ups on the Reports hub so they can pick the depth they need
+    // (and run the plan they chose during sign-up) straight away.
+    nav.navigate('App', { screen: 'ReportsTab' });
   };
 
   return (

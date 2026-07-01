@@ -4,20 +4,27 @@ import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Screen, ScreenHeader, AppText, TierCard } from '../../components';
 import { useTheme } from '../../theme';
-import { REPORT_TIERS } from '../../data';
+import { REPORT_TIERS, useOwnedReports } from '../../data';
 import { ReportTier } from '../../data/types';
+
+const REPORT_ROUTE: Record<ReportTier, string> = {
+  summary: 'SummaryReport',
+  insights: 'HealthInsightsReport',
+  opinion: 'SecondOpinionReport',
+};
 
 export default function ReportsHubScreen() {
   const t = useTheme();
   const nav = useNavigation<any>();
+  const { hasReport } = useOwnedReports();
 
   const onPressTier = (id: ReportTier) => {
-    if (id === 'summary') {
-      nav.navigate('SummaryReport');
-    } else if (id === 'insights') {
-      nav.navigate('PaymentSheet', { tier: 'insights' });
+    // Free Summary and already-owned paid reports open directly; re-opening is
+    // always free. Unowned paid tiers route through the native payment sheet.
+    if (hasReport(id)) {
+      nav.navigate(REPORT_ROUTE[id]);
     } else {
-      nav.navigate('PaymentSheet', { tier: 'opinion' });
+      nav.navigate('PaymentSheet', { tier: id as 'insights' | 'opinion' });
     }
   };
 
@@ -25,6 +32,7 @@ export default function ReportsHubScreen() {
     <Screen edges={['top', 'bottom']}>
       <ScreenHeader
         onBack={() => nav.goBack()}
+        hideBack={!nav.canGoBack()}
         eyebrow="Reports"
         title="Pick the depth you"
         accent="need today."
@@ -33,7 +41,12 @@ export default function ReportsHubScreen() {
 
       <View style={{ gap: t.spacing[5] }}>
         {REPORT_TIERS.map(tier => (
-          <TierCard key={tier.id} tier={tier} onPress={() => onPressTier(tier.id)} />
+          <TierCard
+            key={tier.id}
+            tier={tier}
+            owned={hasReport(tier.id)}
+            onPress={() => onPressTier(tier.id)}
+          />
         ))}
       </View>
 
